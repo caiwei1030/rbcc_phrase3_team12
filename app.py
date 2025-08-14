@@ -12,7 +12,8 @@ from cla import classify_part_from_b64
 st.set_page_config(
     page_title="智能打包核对数字化系统",
     page_icon="📦",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # 自定义CSS样式

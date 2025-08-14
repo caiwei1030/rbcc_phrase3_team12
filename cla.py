@@ -8,11 +8,12 @@ import time  # 引入time库用于延时
 
 # 配置
 BASE_URL = "https://api.siliconflow.cn/v1"
-API_KEY = "sk-gbrvxyqodxyaqanixmembtvfxypgtcvtdmfjluxivnyqdzsd"  # 注意：在实际应用中，请勿硬编码密钥
+API_KEY = os.getenv("SILICONFLOW_API_KEY", "sk-gbrvxyqodxyaqanixmembtvfxypgtcvtdmfjluxivnyqdzsd")  # 从环境变量获取API密钥
 MODEL = "zai-org/GLM-4.5V"  # 支持图片识别的模型
 
-# 建议使用环境变量或安全的方式管理API Key
-# api_key = os.getenv("SILICONFLOW_API_KEY", "sk-...")
+# 检查API密钥是否设置
+if not API_KEY or API_KEY == "sk-gbrvxyqodxyaqanixmembtvfxypgtcvtdmfjluxivnyqdzsd":
+    print("警告: 请设置 SILICONFLOW_API_KEY 环境变量")
 
 client = OpenAI(
     base_url=BASE_URL,
@@ -124,17 +125,3 @@ def capture_and_classify(options):
     # 7. 调用API进行分类
     result = classify_part_from_b64(image_b64, options)
     return result
-
-
-# ==== 主程序 ====
-if __name__ == "__main__":
-    # 定义备选的零件类别
-    part_categories = ["垫片", "螺母", "螺栓", "轴承"]
-
-    # 从摄像头捕获并识别
-    recognition_result = capture_and_classify(part_categories)
-
-    # 打印最终结果
-    print("\n====================")
-    print("识别结果：", recognition_result)
-    print("====================")

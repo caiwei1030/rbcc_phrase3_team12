@@ -32,18 +32,43 @@
 
 ## 🚀 安装和运行
 
-### 1. 安装依赖
+### 本地运行
+
+#### 1. 安装依赖
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. 运行应用
+#### 2. 配置环境变量
+创建 `.streamlit/secrets.toml` 文件并设置：
+```toml
+SILICONFLOW_API_KEY = "your_api_key_here"
+```
+
+#### 3. 运行应用
 ```bash
 streamlit run app.py
 ```
 
-### 3. 访问系统
+#### 4. 访问系统
 打开浏览器访问: http://localhost:8501
+
+### 云端部署
+
+#### 1. 推送到 GitHub
+```bash
+git add .
+git commit -m "Initial commit"
+git push origin main
+```
+
+#### 2. 部署到 Streamlit Cloud
+1. 访问 [share.streamlit.io](https://share.streamlit.io)
+2. 使用 GitHub 账号登录
+3. 选择你的仓库并部署
+4. 在环境变量中设置 `SILICONFLOW_API_KEY`
+
+详细部署说明请参考 [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## 📁 项目结构
 
