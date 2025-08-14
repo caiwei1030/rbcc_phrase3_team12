@@ -6,7 +6,16 @@ import json
 from PIL import Image
 import base64
 import hashlib
-from cla import classify_part_from_b64
+try:
+    from cla import classify_part_from_b64
+except ImportError:
+    # 如果导入失败，尝试使用云兼容版本
+    try:
+        from cla_cloud import classify_part_from_b64
+    except ImportError:
+        # 如果都失败，创建一个模拟函数
+        def classify_part_from_b64(image_b64, options):
+            return "识别功能暂时不可用，请手动输入零件名称"
 
 # 设置页面配置
 st.set_page_config(

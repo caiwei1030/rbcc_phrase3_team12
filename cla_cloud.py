@@ -3,11 +3,11 @@ import json
 from openai import OpenAI
 import httpx
 import os
-import time  # 引入time库用于延时
+import time
 
 # 配置
 BASE_URL = "https://api.siliconflow.cn/v1"
-API_KEY = os.getenv("SILICONFLOW_API_KEY", "sk-gbrvxyqodxyaqanixmembtvfxypgtcvtdmfjluxivnyqdzsd")  # 从环境变量获取API密钥
+API_KEY = os.getenv("SILICONFLOW_API_KEY", "sk-gbrvxyqodxyaqanixmembtvfxypgtcvtdmfjluxivnyqdzsd")
 MODEL = "zai-org/GLM-4.5V"  # 支持图片识别的模型
 
 # 检查API密钥是否设置
@@ -19,14 +19,6 @@ client = OpenAI(
     api_key=API_KEY,
     http_client=httpx.Client(trust_env=False, timeout=60.0)
 )
-
-
-def frame_to_base64(frame):
-    """将图像帧转换为Base64编码的字符串（已废弃，保留兼容性）"""
-    # 此函数已不再使用，因为Streamlit直接提供base64格式的图像
-    # 保留函数签名以维持兼容性
-    return None
-
 
 def classify_part_from_b64(image_b64, options):
     """
@@ -64,10 +56,29 @@ def classify_part_from_b64(image_b64, options):
         # 增加异常捕获，方便调试
         return f"API调用失败: {e}"
 
+def classify_part_from_file(image_file, options):
+    """
+    从文件对象识别零件（Streamlit兼容版本）
+    
+    :param image_file: Streamlit上传的文件对象
+    :param options: 备选的零件类别列表
+    :return: 识别结果
+    """
+    try:
+        # 将文件转换为base64
+        image_bytes = image_file.getvalue()
+        image_b64 = base64.b64encode(image_bytes).decode('utf-8')
+        
+        # 调用识别API
+        return classify_part_from_b64(image_b64, options)
+    except Exception as e:
+        return f"文件处理失败: {e}"
+
+# 兼容性函数
+def frame_to_base64(frame):
+    """兼容性函数，在云环境中不可用"""
+    return None
 
 def capture_and_classify(options):
-    """
-    从摄像头捕获图像并进行分类（已废弃，保留兼容性）。
-    在Streamlit环境中，使用st.camera_input替代此功能。
-    """
-    return "此功能在Streamlit环境中不可用，请使用拍照识别功能。"
+    """兼容性函数，在云环境中不可用"""
+    return "此功能在云环境中不可用，请使用拍照识别功能。"
