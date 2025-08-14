@@ -5,10 +5,12 @@ import os
 import json
 from PIL import Image
 import base64
+import hashlib
+from cla import classify_part_from_b64
 
 # 设置页面配置
 st.set_page_config(
-    page_title="智能打包数字化系统",
+    page_title="智能打包核对数字化系统",
     page_icon="📦",
     layout="wide"
 )
@@ -83,10 +85,16 @@ st.markdown("""
 # 数据文件路径
 REPORTS_FILE = "dataset/reports.json"
 DATA_DIR = "dataset/reports"
+USERS_FILE = "dataset/users.json"
 
 def ensure_data_directory():
     """确保数据目录存在"""
     os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(REPORTS_FILE), exist_ok=True)
+    # 初始化用户文件
+    if not os.path.exists(USERS_FILE):
+        with open(USERS_FILE, 'w', encoding='utf-8') as f:
+            json.dump([], f, ensure_ascii=False, indent=2)
 
 def load_reports():
     """加载报表列表"""
@@ -103,6 +111,51 @@ def save_reports(reports):
     os.makedirs(os.path.dirname(REPORTS_FILE), exist_ok=True)
     with open(REPORTS_FILE, 'w', encoding='utf-8') as f:
         json.dump(reports, f, ensure_ascii=False, indent=2)
+
+def load_users():
+    """加载用户列表"""
+    if os.path.exists(USERS_FILE):
+        try:
+            with open(USERS_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+def save_users(users):
+    """保存用户列表"""
+    os.makedirs(os.path.dirname(USERS_FILE), exist_ok=True)
+    with open(USERS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(users, f, ensure_ascii=False, indent=2)
+
+def hash_password(password):
+    """对密码进行简单哈希"""
+    return hashlib.sha256(password.encode('utf-8')).hexdigest()
+
+def register_user(username, password):
+    """注册新用户"""
+    username = str(username).strip()
+    if not username or not password:
+        return False, "用户名或密码不能为空"
+    users = load_users()
+    if any(u['username'] == username for u in users):
+        return False, "用户名已存在"
+    users.append({
+        'username': username,
+        'password_hash': hash_password(password),
+        'created_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+    save_users(users)
+    return True, "注册成功"
+
+def authenticate_user(username, password):
+    """用户登录校验"""
+    username = str(username).strip()
+    users = load_users()
+    for u in users:
+        if u['username'] == username and u['password_hash'] == hash_password(password):
+            return True
+    return False
 
 def load_report_data(report_id):
     """加载指定报表的数据"""
@@ -177,19 +230,38 @@ def update_report(report_id, name, description):
 def add_record_to_report(report_id, part_name, operator):
     """向指定报表添加记录"""
     df = load_report_data(report_id)
-    next_id = get_next_record_id(df)
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    new_record = {
-        'id': next_id,
-        'part_name': part_name,
-        'quantity': 1,
-        'operator': operator,
-        'time': current_time
-    }
+    # 规范化零件名，避免前后空格导致重复
+    normalized_part_name = str(part_name).strip()
+    if 'part_name' in df.columns:
+        mask = df['part_name'].astype(str).str.strip() == normalized_part_name
+    else:
+        mask = pd.Series([False] * len(df))
     
-    df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
-    save_report_data(report_id, df)
+    if mask.any():
+        # 若已存在相同零件名称，则在现有表项上数量+1，并更新操作员与时间
+        target_index = df[mask].index[-1]
+        try:
+            current_quantity = int(df.at[target_index, 'quantity']) if pd.notna(df.at[target_index, 'quantity']) else 0
+        except Exception:
+            current_quantity = 0
+        df.at[target_index, 'quantity'] = current_quantity + 1
+        df.at[target_index, 'operator'] = operator
+        df.at[target_index, 'time'] = current_time
+        save_report_data(report_id, df)
+    else:
+        # 若不存在，则新增一条记录
+        next_id = get_next_record_id(df)
+        new_record = {
+            'id': next_id,
+            'part_name': normalized_part_name,
+            'quantity': 1,
+            'operator': operator,
+            'time': current_time
+        }
+        df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
+        save_report_data(report_id, df)
     
     # 更新报表的最后修改时间
     reports = load_reports()
@@ -242,15 +314,59 @@ def main():
     <div class="watermark">
         <img src="data:image/png;base64,{}" alt="Logo">
     </div>
-    """.format(base64.b64encode(open("imgs/logo.png", "rb").read()).decode()), unsafe_allow_html=True)
+    """.format(base64.b64encode(open("imgs/logo1.png", "rb").read()).decode()), unsafe_allow_html=True)
     
     # 主标题
-    st.markdown('<h1 class="main-header">📦 智能打包数字化系统</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">📦 智能打包核对数字化系统</h1>', unsafe_allow_html=True)
     
     # 确保数据目录存在
     ensure_data_directory()
     
-    # 侧边栏
+    # 侧边栏 - 账号管理
+    if 'user' not in st.session_state:
+        st.session_state.user = None
+
+    st.sidebar.title("账号")
+    if st.session_state.user:
+        st.sidebar.success(f"已登录：{st.session_state.user['username']}")
+        if st.sidebar.button("注销"):
+            st.session_state.user = None
+            st.rerun()
+    else:
+        auth_tabs = st.sidebar.tabs(["登录", "注册"])
+        with auth_tabs[0]:
+            login_username = st.text_input("用户名", key="login_username")
+            login_password = st.text_input("密码", type="password", key="login_password")
+            if st.button("登录", key="login_button"):
+                if authenticate_user(login_username, login_password):
+                    st.session_state.user = { 'username': login_username.strip() }
+                    st.sidebar.success("登录成功")
+                    st.rerun()
+                else:
+                    st.sidebar.error("用户名或密码不正确")
+        with auth_tabs[1]:
+            reg_username = st.text_input("新用户名", key="reg_username")
+            reg_password = st.text_input("新密码", type="password", key="reg_password")
+            reg_password2 = st.text_input("确认密码", type="password", key="reg_password2")
+            if st.button("注册", key="register_button"):
+                if reg_password != reg_password2:
+                    st.sidebar.error("两次输入的密码不一致")
+                else:
+                    ok, msg = register_user(reg_username, reg_password)
+                    if ok:
+                        st.sidebar.success(msg)
+                    else:
+                        st.sidebar.error(msg)
+
+    # 未登录则不展示功能菜单与主界面功能
+    if not st.session_state.user:
+        st.header("请先登录")
+        st.info("登录后将显示报表管理与数据管理功能。请在左侧侧边栏完成登录或注册。")
+        st.markdown("---")
+        st.markdown("© 智能打包数字化系统 | 技术支持：RBCC-phrase3-Team5-蔡伟")
+        return
+
+    # 侧边栏 - 功能菜单（仅登录后可见）
     st.sidebar.title("功能菜单")
     menu = st.sidebar.selectbox(
         "选择功能",
@@ -269,12 +385,18 @@ def main():
                 with col1:
                     report_name = st.text_input("报表名称", placeholder="请输入报表名称")
                 with col2:
-                    creator = st.text_input("创建人", placeholder="请输入创建人姓名")
+                    if st.session_state.user:
+                        st.text_input("创建人", value=st.session_state.user['username'], disabled=True, key="creator_view")
+                        creator = st.session_state.user['username']
+                    else:
+                        creator = st.text_input("创建人", placeholder="请先登录或手动输入创建人姓名")
                 
                 description = st.text_area("报表描述", placeholder="请输入报表描述")
                 
                 if st.button("创建报表", type="primary"):
-                    if report_name and creator:
+                    if not st.session_state.user:
+                        st.markdown('<div class="error-message">⚠️ 请先登录再创建报表。</div>', unsafe_allow_html=True)
+                    elif report_name and creator:
                         if create_report(report_name, description, creator):
                             st.markdown('<div class="success-message">✅ 报表创建成功！</div>', unsafe_allow_html=True)
                             st.balloons()
@@ -389,20 +511,74 @@ def main():
             with data_submenu[0]:
                 st.header("➕ 添加新数据")
                 
+                # 拍照识别零件
+                st.subheader("📸 拍照识别零件")
+                st.info("请拍照上传零件图片，系统将自动识别零件名称")
+                
+                # 定义零件类别选项（可以根据实际需要修改）
+                part_options = [
+                    "螺丝", "螺母", "垫片", "轴承", "齿轮", "弹簧", "销子", "键", "联轴器",
+                    "皮带", "链条", "电机", "传感器", "控制器", "开关", "连接器", "线缆",
+                    "管道", "阀门", "泵", "过滤器", "散热器", "风扇", "其他"
+                ]
+                
+                # 拍照输入
+                camera_photo = st.camera_input("拍照识别零件", key="camera_photo")
+                
+                if camera_photo is not None:
+                    # 显示拍照结果
+                    st.image(camera_photo, caption="已拍照", use_column_width=True)
+                    
+                    # 转换为base64并调用识别API
+                    if st.button("🔍 开始识别", key="recognize_btn"):
+                        with st.spinner("正在识别零件..."):
+                            try:
+                                # 将拍照图片转换为base64
+                                photo_bytes = camera_photo.getvalue()
+                                photo_base64 = base64.b64encode(photo_bytes).decode('utf-8')
+                                
+                                # 调用识别API
+                                recognized_part = classify_part_from_b64(photo_base64, part_options)
+                                
+                                if recognized_part and not recognized_part.startswith("API调用失败"):
+                                    st.success(f"识别成功！零件名称：{recognized_part}")
+                                    # 自动填充到表单中
+                                    st.session_state.recognized_part_name = recognized_part
+                                else:
+                                    st.error(f"识别失败：{recognized_part}")
+                            except Exception as e:
+                                st.error(f"识别过程出错：{str(e)}")
+                
+                st.markdown("---")
+                st.subheader("✏️ 手动输入零件信息")
+                
                 with st.container():
                     st.markdown('<div class="form-container">', unsafe_allow_html=True)
                     
                     col1, col2 = st.columns(2)
                     with col1:
-                        part_name = st.text_input("零件名称", placeholder="请输入零件名称", key="add_part_name")
+                        # 如果识别成功，自动填充零件名称
+                        default_part_name = st.session_state.get('recognized_part_name', '')
+                        part_name = st.text_input("零件名称", 
+                                                value=default_part_name,
+                                                placeholder="请输入零件名称或拍照识别", 
+                                                key="add_part_name")
                     with col2:
-                        operator = st.text_input("扫描人员", placeholder="请输入扫描人员姓名", key="add_operator")
+                        if st.session_state.user:
+                            st.text_input("扫描人员", value=st.session_state.user['username'], disabled=True, key="add_operator_view")
+                        else:
+                            st.text_input("扫描人员", value="未登录", disabled=True, key="add_operator_view_guest")
                     
                     if st.button("添加数据", type="primary", key="add_data_btn"):
-                        if part_name and operator:
-                            if add_record_to_report(selected_report['id'], part_name, operator):
+                        if not st.session_state.user:
+                            st.markdown('<div class="error-message">⚠️ 请先登录再添加数据。</div>', unsafe_allow_html=True)
+                        elif part_name:
+                            if add_record_to_report(selected_report['id'], part_name, st.session_state.user['username']):
                                 st.markdown('<div class="success-message">✅ 数据添加成功！</div>', unsafe_allow_html=True)
                                 st.balloons()
+                                # 清除识别的零件名称，为下次添加做准备
+                                if 'recognized_part_name' in st.session_state:
+                                    del st.session_state.recognized_part_name
                                 st.rerun()
                             else:
                                 st.markdown('<div class="error-message">❌ 数据添加失败！</div>', unsafe_allow_html=True)
