@@ -6,11 +6,10 @@ import json
 from PIL import Image
 import base64
 import hashlib
-# 移除拍照识别功能，不再需要导入相关模块
 
 # 设置页面配置
 st.set_page_config(
-    page_title="AI械库 让每个零件都能被“一句话找到”",
+    page_title="Zicus-AI",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -25,10 +24,18 @@ st.markdown("""
         left: 20px;
         z-index: 1000;
         opacity: 0.8;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
     }
     .watermark img {
-        width: 80px;
+        width: auto;
         height: auto;
+        max-width: 350px;
+        max-height: 300px;
+        # object-fit: contain;
+        # display: block;
     }
     .main-header {
         text-align: center;
@@ -79,6 +86,31 @@ st.markdown("""
     .report-actions {
         display: flex;
         gap: 10px;
+    }
+    
+    /* 响应式logo样式 */
+    @media (max-width: 768px) {
+        .watermark {
+            top: 10px;
+            left: 10px;
+            padding: 20px;
+        }
+        .watermark img {
+            max-width: 300px;
+            max-height: 250px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .watermark {
+            top: 5px;
+            left: 5px;
+            padding: 15px;
+        }
+        .watermark img {
+            max-width: 250px;
+            max-height: 200px;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -288,10 +320,10 @@ def main():
     <div class="watermark">
         <img src="data:image/png;base64,{}" alt="Logo">
     </div>
-    """.format(base64.b64encode(open("imgs/logo.png", "rb").read()).decode()), unsafe_allow_html=True)
+    """.format(base64.b64encode(open("imgs/logo/ZICUS LOGO.png", "rb").read()).decode()), unsafe_allow_html=True)
     
     # 主标题
-    st.markdown('<h1 class="main-header">📦AI械库——让每个零件都能被“一句话找到”</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Non-standard Part Approval AI Retrieval System</h1>', unsafe_allow_html=True)
     
     # 确保数据目录存在
     ensure_data_directory()
@@ -353,7 +385,7 @@ def main():
         st.header("请先登录")
         st.info("登录后将显示数据管理和查询功能。请在左侧侧边栏完成登录或注册。")
         st.markdown("---")
-        st.markdown("© AI械库 | 技术支持：RBCC-phrase3-Team12-蔡伟")
+        st.markdown("©智库zicus-ai| 技术支持：RBCC-phrase3-Team12-蔡伟")
         return
 
     # 侧边栏 - 功能菜单（根据用户角色显示）
@@ -631,7 +663,7 @@ def main():
     
     # 页脚
     st.markdown("---")
-    st.markdown("© AI械库 | 技术支持：RBCC-phrase3-Team12-蔡伟")
+    st.markdown("©智库zicus-ai| 技术支持：RBCC-phrase3-Team12-蔡伟")
 
 def require_admin():
     """检查用户是否为管理员"""

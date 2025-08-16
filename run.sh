@@ -2,7 +2,7 @@
 
 # 智能打包数字化系统启动脚本
 
-echo "🚀 启动智能打包数字化系统..."
+echo "🚀 启动Non-standard Part Approval AI Retrieval System..."
 
 # 检查Python是否安装
 if ! command -v python3 &> /dev/null; then
