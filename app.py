@@ -90,6 +90,30 @@ st.markdown("""
         gap: 10px;
     }
     
+    /* CAD图片样式 */
+    .cad-image-container {
+        text-align: center;
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .cad-image-title {
+        font-weight: bold;
+        color: #1f77b4;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+    
+    .cad-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
     /* 响应式logo样式 */
     @media (max-width: 768px) {
         .watermark {
@@ -122,6 +146,9 @@ REPORTS_FILE = "dataset/reports.json"
 DATA_DIR = "dataset/reports"
 USERS_FILE = "dataset/users.json"
 
+# CAD图片路径配置
+CAD_IMAGES_DIR = "cad2png/cad/cad/cad/images"
+
 def ensure_data_directory():
     """确保数据目录存在"""
     os.makedirs(DATA_DIR, exist_ok=True)
@@ -146,6 +173,55 @@ def ensure_data_directory():
         users.append(default_admin)
         save_users(users)
         print("Default admin account created: admin / admin123")
+
+def ensure_cad_images_directory():
+    """确保CAD图片目录存在并显示状态信息"""
+    if os.path.exists(CAD_IMAGES_DIR):
+        cad_files = [f for f in os.listdir(CAD_IMAGES_DIR) if f.endswith('.png')]
+        if cad_files:
+            st.sidebar.success(f"✅ CAD image library is ready ({len(cad_files)} images)")
+            return True
+        else:
+            st.sidebar.warning("⚠️ CAD image library is empty")
+            return False
+    else:
+        st.sidebar.error("❌ CAD image library does not exist")
+        return False
+
+def test_cad_image_display():
+    """测试CAD图片显示功能"""
+    if os.path.exists(CAD_IMAGES_DIR):
+        cad_files = [f for f in os.listdir(CAD_IMAGES_DIR) if f.endswith('.png')]
+        if cad_files:
+            # 选择第一个图片作为示例
+            sample_image = cad_files[0]
+            sample_path = os.path.join(CAD_IMAGES_DIR, sample_image)
+            
+            try:
+                with open(sample_path, "rb") as img_file:
+                    img_data = img_file.read()
+                    img_base64 = base64.b64encode(img_data).decode('utf-8')
+                
+                st.success(f"✅ CAD image library connection successful! Example image: {sample_image}")
+                
+                # 显示示例图片
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.image(f"data:image/png;base64,{img_base64}", 
+                             caption=f"Example CAD image: {sample_image}",
+                             width=400,
+                             use_column_width=False)
+                
+                return True
+            except Exception as e:
+                st.error(f"❌ CAD image loading failed: {e}")
+                return False
+        else:
+            st.warning("⚠️ CAD image library is empty")
+            return False
+    else:
+        st.error("❌ CAD image library does not exist")
+        return False
 
 def load_reports():
     """加载报表列表"""
@@ -209,6 +285,57 @@ def authenticate_user(username, password):
             return True, u.get('role', 'user')  # 返回认证状态和用户角色
     return False, None
 
+def show_cad_library_overview():
+    """显示CAD图片库概览"""
+    if os.path.exists(CAD_IMAGES_DIR):
+        cad_files = [f for f in os.listdir(CAD_IMAGES_DIR) if f.endswith('.png')]
+        if cad_files:
+            st.success(f"🎨 CAD image library contains {len(cad_files)} images")
+            
+            # 按类型分组显示
+            circle_files = [f for f in cad_files if 'circle' in f.lower()]
+            plate_files = [f for f in cad_files if 'plate' in f.lower()]
+            bracket_files = [f for f in cad_files if 'bracket' in f.lower()]
+            other_files = [f for f in cad_files if not any(keyword in f.lower() for keyword in ['circle', 'plate', 'bracket'])]
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("Circle", len(circle_files))
+                st.metric("Plate", len(plate_files))
+            with col2:
+                st.metric("Bracket", len(bracket_files))
+                st.metric("Other", len(other_files))
+            
+            # 显示图片预览 - 使用container而不是expander来避免嵌套问题
+            st.markdown("### 🖼️ Image preview")
+            st.info("Below is a preview of some images in the CAD image library")
+            
+            # 显示前6张图片作为预览
+            preview_files = cad_files[:6]
+            cols = st.columns(3)
+            for i, file in enumerate(preview_files):
+                with cols[i % 3]:
+                    try:
+                        img_path = os.path.join(CAD_IMAGES_DIR, file)
+                        with open(img_path, "rb") as img_file:
+                            img_data = img_file.read()
+                            img_base64 = base64.b64encode(img_data).decode('utf-8')
+                        
+                        st.image(f"data:image/png;base64,{img_base64}", 
+                                 caption=file,
+                                 width=200,
+                                 use_column_width=False)
+                    except Exception as e:
+                        st.error(f"Failed to load image: {file}")
+            
+            return True
+        else:
+            st.warning("⚠️ CAD image library is empty")
+            return False
+    else:
+        st.error("❌ CAD image library does not exist")
+        return False
+
 def main():
     # 水印图片
     st.markdown("""
@@ -222,6 +349,9 @@ def main():
     
     # 确保数据目录存在
     ensure_data_directory()
+    
+    # 确保CAD图片目录存在并显示状态
+    ensure_cad_images_directory()
     
     # 侧边栏 - 账号管理
     if 'user' not in st.session_state:
@@ -286,6 +416,22 @@ def main():
     # 侧边栏 - 功能菜单（根据用户角色显示）
     st.sidebar.title("Function Menu")
     user_role = st.session_state.user.get('role', 'user')
+    
+    # CAD图片库状态显示
+    if os.path.exists(CAD_IMAGES_DIR):
+        cad_files = [f for f in os.listdir(CAD_IMAGES_DIR) if f.endswith('.png')]
+        if cad_files:
+            with st.sidebar.expander("🎨 CAD image library status", expanded=False):
+                st.success(f"✅ Available CAD images: {len(cad_files)} images")
+                st.info("CAD images will be automatically displayed when AI retrieval is performed")
+                # 显示前几个图片文件名作为示例
+                if len(cad_files) <= 5:
+                    for file in cad_files:
+                        st.text(f"• {file}")
+                else:
+                    for file in cad_files[:5]:
+                        st.text(f"• {file}")
+                        st.text(f"... there are {len(cad_files) - 5} images")
     
     if user_role == 'admin':
         # 管理员：完整功能
@@ -379,7 +525,12 @@ def main():
                         
                         # 显示当前图片
                         if selected_part.get('image'):
-                            st.image(f"data:image/jpeg;base64,{selected_part['image']}", caption="Current Image", width=200)
+                            col1, col2, col3 = st.columns([1, 2, 1])
+                            with col2:
+                                st.image(f"data:image/jpeg;base64,{selected_part['image']}", 
+                                         caption="Current Image", 
+                                         width=300,
+                                         use_column_width=False)
                         
                         # 新图片上传（可选）
                         new_image = st.file_uploader("Upload New Image (Optional)", type=['png', 'jpg', 'jpeg'], key="edit_image")
@@ -427,7 +578,12 @@ def main():
                     st.write(f"Created Time: {selected_part['created_time']}")
                     
                     if selected_part.get('image'):
-                        st.image(f"data:image/jpeg;base64,{selected_part['image']}", caption="Part Image", width=200)
+                        col1, col2, col3 = st.columns([1, 2, 1])
+                        with col2:
+                            st.image(f"data:image/jpeg;base64,{selected_part['image']}", 
+                                     caption="Part Image", 
+                                     width=300,
+                                     use_column_width=False)
                     
                     col1, col2 = st.columns(2)
                     with col1:
@@ -487,7 +643,12 @@ def main():
                                 
                                 # 显示图片
                                 if part.get('image'):
-                                    st.image(f"data:image/jpeg;base64,{part['image']}", caption="Part Image", width=300)
+                                    col1, col2, col3 = st.columns([1, 2, 1])
+                                    with col2:
+                                        st.image(f"data:image/jpeg;base64,{part['image']}", 
+                                                 caption="Part Image", 
+                                                 width=300,
+                                                 use_column_width=False)
                                 
                                 st.markdown("---")
                     else:
@@ -526,7 +687,12 @@ def main():
                         
                         # 显示图片
                         if part.get('image'):
-                            st.image(f"data:image/jpeg;base64,{part['image']}", caption="Part Image", width=300)
+                            col1, col2, col3 = st.columns([1, 2, 1])
+                            with col2:
+                                st.image(f"data:image/jpeg;base64,{part['image']}", 
+                                         caption="Part Image", 
+                                         width=300,
+                                         use_column_width=False)
                         
                         st.markdown("---")
                 
@@ -556,6 +722,21 @@ def main():
     
     elif menu == "AI Query":
         # AI查询功能 - 保持原有功能
+        st.header("🤖 AI Query")
+        
+        # 添加CAD图片测试功能
+        with st.expander("🎨 CAD image library test", expanded=False):
+            st.info("Test CAD image library connection and display function")
+            if st.button("🧪 Test CAD image display", key="test_cad_btn"):
+                test_cad_image_display()
+        
+        # 添加CAD图片库概览
+        with st.expander("📚 CAD image library overview", expanded=False):
+            st.info("View CAD image library statistics and preview")
+            if st.button("📊 Show CAD image library overview", key="cad_overview_btn"):
+                show_cad_library_overview()
+        
+        st.markdown("---")
         show_parts_query()
     
     elif menu == "Statistics":

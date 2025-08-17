@@ -1,0 +1,95 @@
+{
+  "primitives": [
+    {
+      "type": "Circle",
+      "id": "Circle0",
+      "xc": 666.6666666666667,
+      "yc": 858.3333333333334,
+      "r": 125.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle1",
+      "xc": 166.6666666666667,
+      "yc": 566.6666666666667,
+      "r": 145.83333333333337
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 0.0,
+      "ystart": 1000.0,
+      "xend": 833.3333333333335,
+      "yend": 1000.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line3",
+      "xstart": 833.3333333333335,
+      "ystart": 1000.0,
+      "xend": 833.3333333333335,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line4",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 833.3333333333335,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line5",
+      "xstart": 0.0,
+      "ystart": 1000.0,
+      "xend": 0.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Circle",
+      "id": "Circle6",
+      "xc": 100.00000000000004,
+      "yc": 858.3333333333334,
+      "r": 83.33333333333334
+    },
+    {
+      "type": "Circle",
+      "id": "Circle7",
+      "xc": 350.00000000000006,
+      "yc": 858.3333333333334,
+      "r": 104.16666666666669
+    },
+    {
+      "type": "Circle",
+      "id": "Circle8",
+      "xc": 558.3333333333334,
+      "yc": 566.6666666666667,
+      "r": 166.66666666666669
+    },
+    {
+      "type": "Circle",
+      "id": "Circle9",
+      "xc": 330.6775833333334,
+      "yc": 204.33875,
+      "r": 187.5
+    }
+  ],
+  "constraints": [],
+  "dimensions": [],
+  "metadata": {
+    "primitive_count": {
+      "Line": 4,
+      "Circle": 6,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 0,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

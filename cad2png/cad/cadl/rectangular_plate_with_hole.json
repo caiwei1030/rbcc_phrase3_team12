@@ -1,0 +1,105 @@
+{
+  "primitives": [
+    {
+      "type": "Line",
+      "id": "Line0",
+      "xstart": 0.0,
+      "ystart": 1000.0,
+      "xend": 714.2857142857142,
+      "yend": 1000.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line1",
+      "xstart": 714.2857142857142,
+      "ystart": 1000.0,
+      "xend": 714.2857142857142,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 714.2857142857142,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line3",
+      "xstart": 0.0,
+      "ystart": 1000.0,
+      "xend": 0.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Circle",
+      "id": "Circle4",
+      "xc": 214.28571428571425,
+      "yc": 285.7142857142857,
+      "r": 178.57142857142856
+    }
+  ],
+  "constraints": [
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line0",
+        "Line1"
+      ],
+      "indices": [
+        null,
+        null
+      ]
+    },
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line1",
+        "Line2"
+      ],
+      "indices": [
+        null,
+        null
+      ]
+    },
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line2",
+        "Line3"
+      ],
+      "indices": [
+        null,
+        null
+      ]
+    },
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line3",
+        "Line0"
+      ],
+      "indices": [
+        null,
+        null
+      ]
+    }
+  ],
+  "dimensions": [],
+  "metadata": {
+    "primitive_count": {
+      "Line": 4,
+      "Circle": 1,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 4,
+    "dimension_count": 0,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "primitives": [
+    {
+      "type": "Circle",
+      "id": "Circle0",
+      "xc": 500.0,
+      "yc": 500.0,
+      "r": 281.25
+    },
+    {
+      "type": "Circle",
+      "id": "Circle1",
+      "xc": 124.99999999999994,
+      "yc": 124.99999999999994,
+      "r": 72.0625
+    },
+    {
+      "type": "Circle",
+      "id": "Circle2",
+      "xc": 124.99999999999994,
+      "yc": 874.9999999999999,
+      "r": 72.0625
+    },
+    {
+      "type": "Circle",
+      "id": "Circle3",
+      "xc": 874.9999999999999,
+      "yc": 124.99999999999994,
+      "r": 72.0625
+    },
+    {
+      "type": "Circle",
+      "id": "Circle4",
+      "xc": 874.9999999999999,
+      "yc": 874.9999999999999,
+      "r": 72.0625
+    },
+    {
+      "type": "Line",
+      "id": "Line5",
+      "xstart": 1000.0,
+      "ystart": 1000.0,
+      "xend": 0.0,
+      "yend": 1000.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line6",
+      "xstart": 0.0,
+      "ystart": 1000.0,
+      "xend": 0.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line7",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 1000.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line8",
+      "xstart": 1000.0,
+      "ystart": 1000.0,
+      "xend": 1000.0,
+      "yend": 0.0,
+      "v": 1
+    }
+  ],
+  "constraints": [],
+  "dimensions": [
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle0"
+      ],
+      "value": 0.0045
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle1"
+      ],
+      "value": 0.001153
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle2"
+      ],
+      "value": 0.001153
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle3"
+      ],
+      "value": 0.001153
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle4"
+      ],
+      "value": 0.001153
+    }
+  ],
+  "metadata": {
+    "primitive_count": {
+      "Line": 4,
+      "Circle": 5,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 5,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

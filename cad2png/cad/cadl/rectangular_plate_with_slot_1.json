@@ -1,0 +1,125 @@
+{
+  "primitives": [
+    {
+      "type": "Line",
+      "id": "Line0",
+      "xstart": 0.0,
+      "ystart": 714.2857142857143,
+      "xend": 816.3265306122448,
+      "yend": 714.2857142857143,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line1",
+      "xstart": 816.3265306122448,
+      "ystart": 714.2857142857143,
+      "xend": 816.3265306122448,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 816.3265306122448,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line3",
+      "xstart": 0.0,
+      "ystart": 714.2857142857143,
+      "xend": 0.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line4",
+      "xstart": 0.0,
+      "ystart": 1000.0,
+      "xend": 816.3265306122448,
+      "yend": 1000.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line5",
+      "xstart": 816.3265306122448,
+      "ystart": 1000.0,
+      "xend": 816.3265306122448,
+      "yend": 387.7551020408163,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line6",
+      "xstart": 0.0,
+      "ystart": 387.7551020408163,
+      "xend": 816.3265306122448,
+      "yend": 387.7551020408163,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line7",
+      "xstart": 0.0,
+      "ystart": 1000.0,
+      "xend": 0.0,
+      "yend": 387.7551020408163,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line8",
+      "xstart": 306.1224489795918,
+      "ystart": 102.04081632653062,
+      "xend": 326.53061224489795,
+      "yend": 102.04081632653062,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line9",
+      "xstart": 326.53061224489795,
+      "ystart": 102.04081632653062,
+      "xend": 326.53061224489795,
+      "yend": 142.85714285714286,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line10",
+      "xstart": 306.1224489795918,
+      "ystart": 142.85714285714286,
+      "xend": 326.53061224489795,
+      "yend": 142.85714285714286,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line11",
+      "xstart": 306.1224489795918,
+      "ystart": 102.04081632653062,
+      "xend": 306.1224489795918,
+      "yend": 142.85714285714286,
+      "v": 1
+    }
+  ],
+  "constraints": [],
+  "dimensions": [],
+  "metadata": {
+    "primitive_count": {
+      "Line": 12,
+      "Circle": 0,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 0,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "primitives": [
+    {
+      "type": "Line",
+      "id": "Line0",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 0.0,
+      "yend": 999.9999999999999,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line1",
+      "xstart": 0.0,
+      "ystart": 999.9999999999999,
+      "xend": 921.5500945179583,
+      "yend": 999.9999999999999,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 921.5500945179583,
+      "yend": 999.9999999999999,
+      "v": 1
+    }
+  ],
+  "constraints": [
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line0",
+        "Line1"
+      ],
+      "indices": [
+        1,
+        0
+      ]
+    },
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line0",
+        "Line2"
+      ],
+      "indices": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line1",
+        "Line2"
+      ],
+      "indices": [
+        1,
+        1
+      ]
+    }
+  ],
+  "dimensions": [],
+  "metadata": {
+    "primitive_count": {
+      "Line": 3,
+      "Circle": 0,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 3,
+    "dimension_count": 0,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

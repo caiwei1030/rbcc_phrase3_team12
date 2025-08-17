@@ -351,13 +351,38 @@ def show_parts_query():
                                             </div>
                                             """, unsafe_allow_html=True)
 
+                                            # 显示零件图片（如果有）
                                             image_data = part.get('image')
                                             if image_data:
                                                 try:
-                                                    st.image(f"data:image/jpeg;base64,{image_data}", caption="Part Image",
-                                                             use_column_width=True)
+                                                    # 使用列布局来更好地控制图片大小
+                                                    col1, col2, col3 = st.columns([1, 2, 1])
+                                                    with col2:
+                                                        st.image(f"data:image/jpeg;base64,{image_data}", 
+                                                                 caption="Part Image",
+                                                                 width=400,  # 固定宽度，适应网页展示
+                                                                 use_column_width=False)  # 不使用列宽，保持固定尺寸
                                                 except Exception as img_error:
                                                     st.warning(f"Image display failed: {img_error}")
+                                            
+                                            # 显示CAD图片（如果有）
+                                            cad_image_data = part.get('cad_image')
+                                            if cad_image_data:
+                                                st.markdown("---")
+                                                st.markdown("### 🎨 CAD设计图")
+                                                try:
+                                                    st.image(f"data:image/png;base64,{cad_image_data}", 
+                                                             caption=f"CAD Design: {part.get('part_name', 'N/A')}",
+                                                             use_column_width=True)
+                                                except Exception as cad_img_error:
+                                                    st.warning(f"CAD image display failed: {cad_img_error}")
+                                            
+                                            # 显示CAD图片路径信息（调试用）
+                                            if part.get('has_cad_image'):
+                                                with st.expander("🔍 CAD图片信息", expanded=False):
+                                                    st.info(f"**CAD图片路径:** {part.get('cad_image_path', 'N/A')}")
+                                                    st.info(f"**零件ID:** {part.get('part_number', 'N/A')}")
+                                                    st.info(f"**源文件:** {part.get('source_file', 'N/A')}")
 
                                             if i < len(parts) - 1:
                                                 st.markdown("---")
@@ -417,13 +442,38 @@ def show_parts_query():
                                         </div>
                                         """, unsafe_allow_html=True)
 
+                                        # 显示零件图片（如果有）
                                         image_data = part.get('image')
                                         if image_data:
                                             try:
-                                                st.image(f"data:image/jpeg;base64,{image_data}", caption="Part Image",
-                                                         use_column_width=True)
+                                                # 使用列布局来更好地控制图片大小
+                                                col1, col2, col3 = st.columns([1, 2, 1])
+                                                with col2:
+                                                    st.image(f"data:image/jpeg;base64,{image_data}", 
+                                                             caption="Part Image",
+                                                             width=400,  # 固定宽度，适应网页展示
+                                                             use_column_width=False)  # 不使用列宽，保持固定尺寸
                                             except Exception as img_error:
                                                 st.warning(f"Image display failed: {img_error}")
+                                        
+                                        # 显示CAD图片（如果有）
+                                        cad_image_data = part.get('cad_image')
+                                        if cad_image_data:
+                                            st.markdown("---")
+                                            st.markdown("### 🎨 CAD设计图")
+                                            try:
+                                                st.image(f"data:image/png;base64,{cad_image_data}", 
+                                                         caption=f"CAD Design: {part.get('part_name', 'N/A')}",
+                                                         use_column_width=True)
+                                            except Exception as cad_img_error:
+                                                st.warning(f"CAD image display failed: {cad_img_error}")
+                                        
+                                        # 显示CAD图片路径信息（调试用）
+                                        if part.get('has_cad_image'):
+                                            with st.expander("🔍 CAD图片信息", expanded=False):
+                                                st.info(f"**CAD图片路径:** {part.get('cad_image_path', 'N/A')}")
+                                                st.info(f"**零件ID:** {part.get('part_number', 'N/A')}")
+                                                st.info(f"**源文件:** {part.get('source_file', 'N/A')}")
 
                                         if i < len(results) - 1:
                                             st.markdown("---")
@@ -478,13 +528,48 @@ def _display_search_results(results):
                 </div>
                 """, unsafe_allow_html=True)
 
+                # 显示零件图片（如果有）
                 image_data = part.get('image')
                 if image_data:
                     try:
-                        st.image(f"data:image/jpeg;base64,{image_data}", caption="Part Image",
-                                 use_column_width=True)
+                        # 使用列布局来更好地控制图片大小
+                        col1, col2, col3 = st.columns([1, 2, 1])
+                        with col2:
+                            st.image(f"data:image/jpeg;base64,{image_data}", 
+                                     caption="Part Image",
+                                     width=400,  # 固定宽度，适应网页展示
+                                     use_column_width=False)  # 不使用列宽，保持固定尺寸
                     except Exception as img_error:
                         st.warning(f"Image display failed: {img_error}")
+                
+                # 显示CAD图片（如果有）
+                cad_image_data = part.get('cad_image')
+                if cad_image_data:
+                    st.markdown("---")
+                    st.markdown("### 🎨 CAD设计图")
+                    try:
+                        # 使用列布局来更好地控制图片大小
+                        col1, col2, col3 = st.columns([1, 2, 1])
+                        with col2:
+                            st.image(f"data:image/png;base64,{cad_image_data}", 
+                                     caption=f"CAD Design: {part.get('part_name', 'N/A')}",
+                                     width=400,  # 固定宽度，适应网页展示
+                                     use_column_width=False)  # 不使用列宽，保持固定尺寸
+                    except Exception as cad_img_error:
+                        st.warning(f"CAD image display failed: {cad_img_error}")
+                
+                # 显示CAD图片路径信息（调试用）
+                if part.get('has_cad_image'):
+                    with st.expander("🔍 CAD图片信息", expanded=False):
+                        st.info(f"**CAD图片路径:** {part.get('cad_image_path', 'N/A')}")
+                        st.info(f"**零件ID:** {part.get('part_number', 'N/A')}")
+                        st.info(f"**源文件:** {part.get('source_file', 'N/A')}")
+                        # 添加图片预览
+                        if part.get('cad_image'):
+                            st.image(f"data:image/png;base64,{part['cad_image']}", 
+                                     caption="CAD图片预览",
+                                     width=300,
+                                     use_column_width=False)
 
                 if i < len(results) - 1:
                     st.markdown("---")

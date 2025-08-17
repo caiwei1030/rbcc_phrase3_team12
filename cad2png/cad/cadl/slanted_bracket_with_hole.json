@@ -1,0 +1,87 @@
+{
+  "primitives": [
+    {
+      "type": "Line",
+      "id": "Line0",
+      "xstart": 500.0,
+      "ystart": 83.33333333333333,
+      "xend": 1000.0,
+      "yend": 83.33333333333333,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line1",
+      "xstart": 1000.0,
+      "ystart": 83.33333333333333,
+      "xend": 1000.0,
+      "yend": 145.83333333333334,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 1000.0,
+      "ystart": 145.83333333333334,
+      "xend": 500.0,
+      "yend": 500.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line3",
+      "xstart": 500.0,
+      "ystart": 500.0,
+      "xend": 0.0,
+      "yend": 500.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line4",
+      "xstart": 0.0,
+      "ystart": 500.0,
+      "xend": 0.0,
+      "yend": 416.66666666666663,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line5",
+      "xstart": 0.0,
+      "ystart": 416.66666666666663,
+      "xend": 500.0,
+      "yend": 416.66666666666663,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line6",
+      "xstart": 500.0,
+      "ystart": 83.33333333333333,
+      "xend": 500.0,
+      "yend": 416.66666666666663,
+      "v": 1
+    },
+    {
+      "type": "Circle",
+      "id": "Circle0",
+      "xc": 500.0,
+      "yc": 83.33333333333333,
+      "r": 83.33333333333333
+    }
+  ],
+  "constraints": [],
+  "dimensions": [],
+  "metadata": {
+    "primitive_count": {
+      "Line": 7,
+      "Circle": 1,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 0,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

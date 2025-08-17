@@ -1,0 +1,46 @@
+{
+  "primitives": [
+    {
+      "type": "Circle",
+      "id": "Circle0",
+      "xc": 500.0,
+      "yc": 500.0,
+      "r": 399.99999999999994
+    },
+    {
+      "type": "Circle",
+      "id": "Circle1",
+      "xc": 500.0,
+      "yc": 500.0,
+      "r": 500.0
+    }
+  ],
+  "constraints": [],
+  "dimensions": [
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle0"
+      ],
+      "value": 0.0127
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle1"
+      ],
+      "value": 0.015875
+    }
+  ],
+  "metadata": {
+    "primitive_count": {
+      "Line": 0,
+      "Circle": 2,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 2,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

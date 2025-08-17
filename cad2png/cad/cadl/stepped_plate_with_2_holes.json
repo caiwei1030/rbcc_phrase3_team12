@@ -1,0 +1,103 @@
+{
+  "primitives": [
+    {
+      "type": "Line",
+      "id": "Line0",
+      "xstart": 1000.0,
+      "ystart": 145.45454545454547,
+      "xend": 1000.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line1",
+      "xstart": 1000.0,
+      "ystart": 0.0,
+      "xend": 0.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 0.0,
+      "yend": 136.36363636363637,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line3",
+      "xstart": 0.0,
+      "ystart": 136.36363636363637,
+      "xend": 36.36363636363634,
+      "yend": 136.36363636363637,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line4",
+      "xstart": 36.36363636363634,
+      "ystart": 136.36363636363637,
+      "xend": 36.36363636363634,
+      "yend": 54.545454545454554,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line5",
+      "xstart": 872.7272727272729,
+      "ystart": 54.545454545454554,
+      "xend": 36.36363636363634,
+      "yend": 54.545454545454554,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line6",
+      "xstart": 872.7272727272729,
+      "ystart": 54.545454545454554,
+      "xend": 872.7272727272729,
+      "yend": 145.45454545454547,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line7",
+      "xstart": 1000.0,
+      "ystart": 145.45454545454547,
+      "xend": 872.7272727272729,
+      "yend": 145.45454545454547,
+      "v": 1
+    },
+    {
+      "type": "Circle",
+      "id": "Circle0",
+      "xc": 267.71618181818184,
+      "yc": 42.06054545454546,
+      "r": 25.604181818181818
+    },
+    {
+      "type": "Circle",
+      "id": "Circle1",
+      "xc": 485.8980000000001,
+      "yc": 42.06054545454546,
+      "r": 25.604181818181818
+    }
+  ],
+  "constraints": [],
+  "dimensions": [],
+  "metadata": {
+    "primitive_count": {
+      "Line": 8,
+      "Circle": 2,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 0,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

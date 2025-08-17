@@ -1,0 +1,165 @@
+{
+  "primitives": [
+    {
+      "type": "Line",
+      "id": "Line0",
+      "xstart": 1000.0,
+      "ystart": 500.0,
+      "xend": 0.0,
+      "yend": 500.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line1",
+      "xstart": 0.0,
+      "ystart": 500.0,
+      "xend": 0.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 1000.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line3",
+      "xstart": 1000.0,
+      "ystart": 500.0,
+      "xend": 1000.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Circle",
+      "id": "Circle4",
+      "xc": 262.5,
+      "yc": 250.0,
+      "r": 7.5
+    },
+    {
+      "type": "Circle",
+      "id": "Circle5",
+      "xc": 262.5,
+      "yc": 250.0,
+      "r": 15.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle6",
+      "xc": 737.5000000000001,
+      "yc": 250.0,
+      "r": 7.5
+    },
+    {
+      "type": "Circle",
+      "id": "Circle7",
+      "xc": 737.5000000000001,
+      "yc": 250.0,
+      "r": 15.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle8",
+      "xc": 737.5000000000001,
+      "yc": 100.00000000000001,
+      "r": 7.5
+    },
+    {
+      "type": "Circle",
+      "id": "Circle9",
+      "xc": 737.5000000000001,
+      "yc": 100.00000000000001,
+      "r": 15.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle10",
+      "xc": 262.5,
+      "yc": 100.00000000000001,
+      "r": 7.5
+    },
+    {
+      "type": "Circle",
+      "id": "Circle11",
+      "xc": 262.5,
+      "yc": 100.00000000000001,
+      "r": 15.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle12",
+      "xc": 737.5000000000001,
+      "yc": 400.0,
+      "r": 7.5
+    },
+    {
+      "type": "Circle",
+      "id": "Circle13",
+      "xc": 737.5000000000001,
+      "yc": 400.0,
+      "r": 15.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle14",
+      "xc": 500.0,
+      "yc": 400.0,
+      "r": 7.5
+    },
+    {
+      "type": "Circle",
+      "id": "Circle15",
+      "xc": 500.0,
+      "yc": 400.0,
+      "r": 15.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle16",
+      "xc": 262.5,
+      "yc": 400.0,
+      "r": 7.5
+    },
+    {
+      "type": "Circle",
+      "id": "Circle17",
+      "xc": 262.5,
+      "yc": 400.0,
+      "r": 15.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle18",
+      "xc": 500.0,
+      "yc": 100.00000000000001,
+      "r": 7.5
+    },
+    {
+      "type": "Circle",
+      "id": "Circle19",
+      "xc": 500.0,
+      "yc": 100.00000000000001,
+      "r": 15.0
+    }
+  ],
+  "constraints": [],
+  "dimensions": [],
+  "metadata": {
+    "primitive_count": {
+      "Line": 4,
+      "Circle": 16,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 0,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

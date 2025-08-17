@@ -1,0 +1,149 @@
+{
+  "primitives": [
+    {
+      "type": "Line",
+      "id": "Line0",
+      "xstart": 0.0,
+      "ystart": 0.0,
+      "xend": 1000.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line1",
+      "xstart": 1000.0,
+      "ystart": 0.0,
+      "xend": 1000.0,
+      "yend": 233.33333333333331,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 1000.0,
+      "ystart": 233.33333333333331,
+      "xend": 0.0,
+      "yend": 233.33333333333331,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line3",
+      "xstart": 0.0,
+      "ystart": 233.33333333333331,
+      "xend": 0.0,
+      "yend": 0.0,
+      "v": 1
+    }
+  ],
+  "constraints": [
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line0",
+        "Line1"
+      ],
+      "indices": [
+        1,
+        0
+      ]
+    },
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line1",
+        "Line2"
+      ],
+      "indices": [
+        1,
+        0
+      ]
+    },
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line2",
+        "Line3"
+      ],
+      "indices": [
+        1,
+        0
+      ]
+    },
+    {
+      "type": "Coincident",
+      "elements": [
+        "Line3",
+        "Line0"
+      ],
+      "indices": [
+        1,
+        0
+      ]
+    },
+    {
+      "type": "Horizontal",
+      "elements": [
+        "Line0"
+      ],
+      "indices": [
+        null
+      ]
+    },
+    {
+      "type": "Vertical",
+      "elements": [
+        "Line1"
+      ],
+      "indices": [
+        null
+      ]
+    },
+    {
+      "type": "Horizontal",
+      "elements": [
+        "Line2"
+      ],
+      "indices": [
+        null
+      ]
+    },
+    {
+      "type": "Vertical",
+      "elements": [
+        "Line3"
+      ],
+      "indices": [
+        null
+      ]
+    }
+  ],
+  "dimensions": [
+    {
+      "type": "Linear",
+      "elements": [
+        "Line0"
+      ],
+      "value": 0.45
+    },
+    {
+      "type": "Linear",
+      "elements": [
+        "Line1"
+      ],
+      "value": 0.105
+    }
+  ],
+  "metadata": {
+    "primitive_count": {
+      "Line": 4,
+      "Circle": 0,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 8,
+    "dimension_count": 2,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

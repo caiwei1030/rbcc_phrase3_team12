@@ -1,0 +1,89 @@
+{
+  "primitives": [
+    {
+      "type": "Line",
+      "id": "Line0",
+      "xstart": 0.0,
+      "ystart": 352.28617963057786,
+      "xend": 996.6387361982976,
+      "yend": 352.28617963057786,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line1",
+      "xstart": 996.6387361982976,
+      "ystart": 352.28617963057786,
+      "xend": 996.6387361982976,
+      "yend": 152.95843239091838,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line2",
+      "xstart": 996.6387361982976,
+      "ystart": 152.95843239091838,
+      "xend": 0.0,
+      "yend": 152.95843239091838,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line3",
+      "xstart": 0.0,
+      "ystart": 152.95843239091838,
+      "xend": 0.0,
+      "yend": 352.28617963057786,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line4",
+      "xstart": 1000.0,
+      "ystart": 179.39497251569358,
+      "xend": 23.294038525668338,
+      "yend": 179.39497251569358,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line5",
+      "xstart": 23.294038525668338,
+      "ystart": 179.39497251569358,
+      "xend": 23.294038525668338,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line6",
+      "xstart": 23.294038525668338,
+      "ystart": 0.0,
+      "xend": 1000.0,
+      "yend": 0.0,
+      "v": 1
+    },
+    {
+      "type": "Line",
+      "id": "Line7",
+      "xstart": 1000.0,
+      "ystart": 0.0,
+      "xend": 1000.0,
+      "yend": 179.39497251569358,
+      "v": 1
+    }
+  ],
+  "constraints": [],
+  "dimensions": [],
+  "metadata": {
+    "primitive_count": {
+      "Line": 8,
+      "Circle": 0,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 0,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}

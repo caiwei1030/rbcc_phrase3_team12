@@ -5,8 +5,73 @@
 import streamlit as st
 import requests
 import json
+import os
 from config import LLM_MODEL, FASTGPT_API_KEY, FASTGPT_DATASET_ID
 from .llm_service import get_llm_client, _generate_fallback_components, _calculate_relevance_reason
+
+
+def _get_cad_image_path(part_id, source_file):
+    """
+    根据零件ID和源文件名查找对应的CAD图片路径
+    """
+    # CAD图片目录路径 - 更新为正确的路径
+    cad_images_dir = "cad2png/cad/cad/cad/images"
+    
+    # 尝试多种可能的图片文件名
+    possible_names = [
+        f"{part_id}.png",
+        f"{source_file.replace('.json', '.png')}",
+        f"{part_id.lower()}.png",
+        f"{source_file.replace('.json', '').lower()}.png"
+    ]
+    
+    # 检查文件是否存在
+    for img_name in possible_names:
+        img_path = os.path.join(cad_images_dir, img_name)
+        if os.path.exists(img_path):
+            return img_path
+    
+    return None
+
+
+def _load_cad_image_as_base64(image_path):
+    """
+    将CAD图片加载为base64编码，用于在Streamlit中显示
+    """
+    try:
+        import base64
+        with open(image_path, "rb") as img_file:
+            img_data = img_file.read()
+            img_base64 = base64.b64encode(img_data).decode('utf-8')
+            return img_base64
+    except Exception as e:
+        st.warning(f"无法加载CAD图片 {image_path}: {e}")
+        return None
+
+
+def _enhance_part_with_cad_image(part_data):
+    """
+    为零件数据添加CAD图片信息
+    """
+    part_id = part_data.get('part_number', part_data.get('id', ''))
+    source_file = part_data.get('source_file', '')
+    
+    # 查找对应的CAD图片
+    cad_image_path = _get_cad_image_path(part_id, source_file)
+    
+    if cad_image_path:
+        # 加载图片为base64
+        cad_image_base64 = _load_cad_image_as_base64(cad_image_path)
+        if cad_image_base64:
+            part_data['cad_image'] = cad_image_base64
+            part_data['cad_image_path'] = cad_image_path
+            part_data['has_cad_image'] = True
+        else:
+            part_data['has_cad_image'] = False
+    else:
+        part_data['has_cad_image'] = False
+    
+    return part_data
 
 
 def find_parts_for_product(product_description: str):
@@ -260,6 +325,7 @@ def search_fastgpt_kb(query: str, similarity: float = 0.5):
                         'operator': str(part_data.get('operator', '系统')),
                         'created_time': str(part_data.get('created_time', '未知')),
                         'image': part_data.get('image'),
+                        'source_file': str(part_data.get('source_file', '')),
                         'keywords': str(part_data.get('keywords', '')),
                         'score': combined_score,
                         'embedding_score': final_score,
@@ -268,6 +334,9 @@ def search_fastgpt_kb(query: str, similarity: float = 0.5):
                         'llm_analyzed': False,
                         'relevance_reason': _calculate_relevance_reason(query, part_data)
                     }
+                    
+                    # 增强零件数据，添加CAD图片信息
+                    normalized_part = _enhance_part_with_cad_image(normalized_part)
                     
                     # 保留所有结果，让FastGPT的相似度阈值起作用
                     processed_results.append(normalized_part)

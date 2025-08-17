@@ -1,0 +1,144 @@
+{
+  "primitives": [
+    {
+      "type": "Circle",
+      "id": "Circle0",
+      "xc": 500.0,
+      "yc": 500.0,
+      "r": 500.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle1",
+      "xc": 234.83500000000004,
+      "yc": 234.83500000000004,
+      "r": 75.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle2",
+      "xc": 500.0,
+      "yc": 125.00000000000004,
+      "r": 75.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle3",
+      "xc": 765.165,
+      "yc": 234.83500000000004,
+      "r": 75.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle4",
+      "xc": 875.0,
+      "yc": 500.0,
+      "r": 75.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle5",
+      "xc": 765.165,
+      "yc": 765.165,
+      "r": 75.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle6",
+      "xc": 234.83500000000004,
+      "yc": 765.165,
+      "r": 75.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle7",
+      "xc": 500.0,
+      "yc": 875.0,
+      "r": 75.0
+    },
+    {
+      "type": "Circle",
+      "id": "Circle8",
+      "xc": 125.00000000000004,
+      "yc": 500.0,
+      "r": 75.0
+    }
+  ],
+  "constraints": [],
+  "dimensions": [
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle0"
+      ],
+      "value": 0.05
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle1"
+      ],
+      "value": 0.0075
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle2"
+      ],
+      "value": 0.0075
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle3"
+      ],
+      "value": 0.0075
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle4"
+      ],
+      "value": 0.0075
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle5"
+      ],
+      "value": 0.0075
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle6"
+      ],
+      "value": 0.0075
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle7"
+      ],
+      "value": 0.0075
+    },
+    {
+      "type": "Radius",
+      "elements": [
+        "Circle8"
+      ],
+      "value": 0.0075
+    }
+  ],
+  "metadata": {
+    "primitive_count": {
+      "Line": 0,
+      "Circle": 9,
+      "Arc": 0,
+      "Point": 0
+    },
+    "constraint_count": 0,
+    "dimension_count": 9,
+    "notes": "Coordinates and radii are normalized to [0, 1000)."
+  }
+}
