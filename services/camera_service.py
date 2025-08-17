@@ -22,10 +22,10 @@ latest_recognition_result = None
 
 def capture_and_recognize_from_image(image):
     """
-    从PIL图像进行成品识别。
+    从图像进行成品识别。
     
     Args:
-        image: PIL Image对象，来自st.camera_input
+        image: 图像对象，可能是PIL Image或st.camera_input的UploadedFile
         
     Returns:
         dict: 识别结果
@@ -34,9 +34,20 @@ def capture_and_recognize_from_image(image):
         return {"success": False, "error": "未获取到图像"}
 
     try:
+        # 处理不同类型的图像输入
+        if hasattr(image, 'read'):  # UploadedFile对象
+            # 从UploadedFile读取图像数据
+            image_data = image.read()
+            # 将字节数据转换为PIL Image
+            pil_image = Image.open(io.BytesIO(image_data))
+        elif hasattr(image, 'save'):  # PIL Image对象
+            pil_image = image
+        else:
+            return {"success": False, "error": "不支持的图像格式"}
+
         # 将图像转换为base64编码
         buffer = io.BytesIO()
-        image.save(buffer, format='JPEG', quality=85)
+        pil_image.save(buffer, format='JPEG', quality=85)
         image_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
         # 优先调用GLM-4V进行成品识别，如果失败则使用备用方案
@@ -92,7 +103,9 @@ def _recognize_image_with_glm(image_base64):
             products = re.findall(r'["\']([^"\']+)["\']', result_text)
             return [p for p in products if len(p) > 1][:3]
 
-    except Exception:
+    except Exception as e:
+        # 记录具体错误信息
+        print(f"GLM-4V识别失败: {str(e)}")
         # 如果API调用或解析过程中出现任何其他错误，则退回到简化版
         return _simplified_recognize_image()
 
@@ -122,7 +135,9 @@ def _simplified_recognize_image():
         except (ValueError, SyntaxError):
             return ["摄像头检测物品"]
 
-    except Exception:
+    except Exception as e:
+        # 记录具体错误信息
+        print(f"简化识别失败: {str(e)}")
         return ["检测到的物品"]
 
 
