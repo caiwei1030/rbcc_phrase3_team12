@@ -143,7 +143,7 @@ def ensure_data_directory():
         }
         users.append(default_admin)
         save_users(users)
-        print("已创建默认管理员账号：admin / admin123")
+        print("Default admin account created: admin / admin123")
 
 def load_reports():
     """加载报表列表"""
@@ -185,10 +185,10 @@ def register_user(username, password, role="user"):
     """注册新用户"""
     username = str(username).strip()
     if not username or not password:
-        return False, "用户名或密码不能为空"
+        return False, "Username or password cannot be empty"
     users = load_users()
     if any(u['username'] == username for u in users):
-        return False, "用户名已存在"
+        return False, "Username already exists"
     users.append({
         'username': username,
         'password_hash': hash_password(password),
@@ -196,7 +196,7 @@ def register_user(username, password, role="user"):
         'created_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
     save_users(users)
-    return True, "注册成功"
+    return True, "Registration successful"
 
 def authenticate_user(username, password):
     """用户登录校验"""
@@ -240,7 +240,7 @@ def add_part(part_number, part_name, description, image_data, operator):
     
     # 检查零件编号是否已存在
     if any(part['part_number'] == part_number for part in parts):
-        return False, "零件编号已存在"
+        return False, "Part number already exists"
     
     new_part = {
         'id': get_next_part_id(),
@@ -254,7 +254,7 @@ def add_part(part_number, part_name, description, image_data, operator):
     
     parts.append(new_part)
     save_parts_data(parts)
-    return True, "零件添加成功"
+    return True, "Part added successfully"
 
 def update_part(part_id, part_number, part_name, description, image_data, operator):
     """更新零件信息"""
@@ -264,7 +264,7 @@ def update_part(part_id, part_number, part_name, description, image_data, operat
         if part['id'] == part_id:
             # 检查零件编号是否与其他零件重复
             if any(p['part_number'] == part_number and p['id'] != part_id for p in parts):
-                return False, "零件编号与其他零件重复"
+                return False, "Part number conflicts with other parts"
             
             part['part_number'] = part_number
             part['part_name'] = part_name
@@ -276,7 +276,7 @@ def update_part(part_id, part_number, part_name, description, image_data, operat
             break
     
     save_parts_data(parts)
-    return True, "零件更新成功"
+    return True, "Part updated successfully"
 
 def delete_part(part_id):
     """删除零件"""
@@ -332,47 +332,47 @@ def main():
     if 'user' not in st.session_state:
         st.session_state.user = None
 
-    st.sidebar.title("账号")
+    st.sidebar.title("Account")
     if st.session_state.user:
         user_role = st.session_state.user.get('role', 'user')
-        role_display = "👑 管理员" if user_role == 'admin' else "👤 用户"
-        st.sidebar.success(f"已登录：{st.session_state.user['username']}")
-        st.sidebar.info(f"角色：{role_display}")
-        if st.sidebar.button("注销"):
+        role_display = "👑 Admin" if user_role == 'admin' else "👤 User"
+        st.sidebar.success(f"Logged in: {st.session_state.user['username']}")
+        st.sidebar.info(f"Role: {role_display}")
+        if st.sidebar.button("Logout"):
             st.session_state.user = None
             st.rerun()
     else:
-        auth_tabs = st.sidebar.tabs(["登录", "注册"])
+        auth_tabs = st.sidebar.tabs(["Login", "Register"])
         with auth_tabs[0]:
-            login_username = st.text_input("用户名", key="login_username")
-            login_password = st.text_input("密码", type="password", key="login_password")
-            if st.button("登录", key="login_button"):
+            login_username = st.text_input("Username", key="login_username")
+            login_password = st.text_input("Password", type="password", key="login_password")
+            if st.button("Login", key="login_button"):
                 auth_result, user_role = authenticate_user(login_username, login_password)
                 if auth_result:
                     st.session_state.user = { 
                         'username': login_username.strip(),
                         'role': user_role
                     }
-                    st.sidebar.success(f"登录成功！角色：{'管理员' if user_role == 'admin' else '用户'}")
+                    st.sidebar.success(f"Login successful! Role: {'Admin' if user_role == 'admin' else 'User'}")
                     st.rerun()
                 else:
-                    st.sidebar.error("用户名或密码不正确")
+                    st.sidebar.error("Incorrect username or password")
         with auth_tabs[1]:
-            reg_username = st.text_input("新用户名", key="reg_username")
-            reg_password = st.text_input("新密码", type="password", key="reg_password")
-            reg_password2 = st.text_input("确认密码", type="password", key="reg_password2")
+            reg_username = st.text_input("New Username", key="reg_username")
+            reg_password = st.text_input("New Password", type="password", key="reg_password")
+            reg_password2 = st.text_input("Confirm Password", type="password", key="reg_password2")
             
             # 角色选择（默认用户）
             reg_role = st.selectbox(
-                "用户角色",
+                "User Role",
                 ["user", "admin"],
-                format_func=lambda x: "👤 普通用户" if x == "user" else "👑 管理员",
+                format_func=lambda x: "👤 Regular User" if x == "user" else "👑 Administrator",
                 key="reg_role"
             )
             
-            if st.button("注册", key="register_button"):
+            if st.button("Register", key="register_button"):
                 if reg_password != reg_password2:
-                    st.sidebar.error("两次输入的密码不一致")
+                    st.sidebar.error("Passwords do not match")
                 else:
                     ok, msg = register_user(reg_username, reg_password, reg_role)
                     if ok:
@@ -382,63 +382,63 @@ def main():
 
     # 未登录则不展示功能菜单与主界面功能
     if not st.session_state.user:
-        st.header("请先登录")
-        st.info("登录后将显示数据管理和查询功能。请在左侧侧边栏完成登录或注册。")
+        st.header("Please Login First")
+        st.info("After logging in, data management and query functions will be displayed. Please complete login or registration in the left sidebar.")
         st.markdown("---")
-        st.markdown("©智库zicus-ai| 技术支持：RBCC-phrase3-Team12-蔡伟")
+        st.markdown("©智库zicus-ai| Technical Support: RBCC-phrase3-Team12-蔡伟")
         return
 
     # 侧边栏 - 功能菜单（根据用户角色显示）
-    st.sidebar.title("功能菜单")
+    st.sidebar.title("Function Menu")
     user_role = st.session_state.user.get('role', 'user')
     
     if user_role == 'admin':
         # 管理员：完整功能
         menu = st.sidebar.selectbox(
-            "选择功能",
-            ["零件管理", "零件查询"]
+            "Select Function",
+            ["Part Management", "Part Query"]
         )
     else:
         # 用户：只读功能
         menu = st.sidebar.selectbox(
-            "选择功能",
-            ["零件查询"]
+            "Select Function",
+            ["Part Query"]
         )
     
-    if menu == "零件管理":
+    if menu == "Part Management":
         # 检查用户权限
         if st.session_state.user.get('role') != 'admin':
-            st.error("⚠️ 权限不足！只有管理员可以访问零件管理功能。")
-            st.info("请使用管理员账号登录。")
+            st.error("⚠️ Insufficient permissions! Only administrators can access part management functions.")
+            st.info("Please login with an administrator account.")
             return
         
-        st.header("🔧 零件管理")
+        st.header("🔧 Part Management")
         
         # 子菜单
-        management_tabs = st.tabs(["添加零件", "编辑零件", "删除零件"])
+        management_tabs = st.tabs(["Add Part", "Edit Part", "Delete Part"])
         
         # 添加零件
         with management_tabs[0]:
-            st.subheader("➕ 添加新零件")
+            st.subheader("➕ Add New Part")
             
             with st.container():
                 st.markdown('<div class="form-container">', unsafe_allow_html=True)
                 
                 col1, col2 = st.columns(2)
                 with col1:
-                    part_number = st.text_input("零件编号", placeholder="请输入零件编号", key="add_part_number")
-                    part_name = st.text_input("零件名称", placeholder="请输入零件名称", key="add_part_name")
+                    part_number = st.text_input("Part Number", placeholder="Enter part number", key="add_part_number")
+                    part_name = st.text_input("Part Name", placeholder="Enter part name", key="add_part_name")
                 with col2:
-                    operator = st.text_input("操作员", value=st.session_state.user['username'], disabled=True, key="add_operator")
+                    operator = st.text_input("Operator", value=st.session_state.user['username'], disabled=True, key="add_operator")
                 
-                description = st.text_area("描述信息", placeholder="请输入零件描述信息", key="add_description")
+                description = st.text_area("Description", placeholder="Enter part description", key="add_description")
                 
                 # 图片上传
-                uploaded_image = st.file_uploader("上传零件图片", type=['png', 'jpg', 'jpeg'], key="add_image")
+                uploaded_image = st.file_uploader("Upload Part Image", type=['png', 'jpg', 'jpeg'], key="add_image")
                 
-                if st.button("添加零件", type="primary", key="add_part_btn"):
+                if st.button("Add Part", type="primary", key="add_part_btn"):
                     if not part_number or not part_name or not description:
-                        st.markdown('<div class="error-message">⚠️ 请填写完整信息！</div>', unsafe_allow_html=True)
+                        st.markdown('<div class="error-message">⚠️ Please fill in all information!</div>', unsafe_allow_html=True)
                     else:
                         # 处理图片数据
                         image_data = None
@@ -458,12 +458,12 @@ def main():
         
         # 编辑零件
         with management_tabs[1]:
-            st.subheader("✏️ 编辑零件信息")
+            st.subheader("✏️ Edit Part Information")
             
             parts = load_parts_data()
             if parts:
                 selected_part = st.selectbox(
-                    "选择要编辑的零件",
+                    "Select Part to Edit",
                     parts,
                     format_func=lambda x: f"{x['part_number']} - {x['part_name']}",
                     key="edit_part_select"
@@ -475,23 +475,23 @@ def main():
                         
                         col1, col2 = st.columns(2)
                         with col1:
-                            new_part_number = st.text_input("零件编号", value=selected_part['part_number'], key="edit_part_number")
-                            new_part_name = st.text_input("零件名称", value=selected_part['part_name'], key="edit_part_name")
+                            new_part_number = st.text_input("Part Number", value=selected_part['part_number'], key="edit_part_number")
+                            new_part_name = st.text_input("Part Name", value=selected_part['part_name'], key="edit_part_name")
                         with col2:
-                            new_operator = st.text_input("操作员", value=st.session_state.user['username'], disabled=True, key="edit_operator")
+                            new_operator = st.text_input("Operator", value=st.session_state.user['username'], disabled=True, key="edit_operator")
                         
-                        new_description = st.text_area("描述信息", value=selected_part['description'], key="edit_description")
+                        new_description = st.text_area("Description", value=selected_part['description'], key="edit_description")
                         
                         # 显示当前图片
                         if selected_part.get('image'):
-                            st.image(f"data:image/jpeg;base64,{selected_part['image']}", caption="当前图片", width=200)
+                            st.image(f"data:image/jpeg;base64,{selected_part['image']}", caption="Current Image", width=200)
                         
                         # 新图片上传（可选）
-                        new_image = st.file_uploader("上传新图片（可选）", type=['png', 'jpg', 'jpeg'], key="edit_image")
+                        new_image = st.file_uploader("Upload New Image (Optional)", type=['png', 'jpg', 'jpeg'], key="edit_image")
                         
-                        if st.button("更新零件", type="primary", key="update_part_btn"):
+                        if st.button("Update Part", type="primary", key="update_part_btn"):
                             if not new_part_number or not new_part_name or not new_description:
-                                st.markdown('<div class="error-message">⚠️ 请填写完整信息！</div>', unsafe_allow_html=True)
+                                st.markdown('<div class="error-message">⚠️ Please fill in all information!</div>', unsafe_allow_html=True)
                             else:
                                 # 处理新图片数据
                                 new_image_data = None
@@ -508,73 +508,73 @@ def main():
                         
                         st.markdown('</div>', unsafe_allow_html=True)
             else:
-                st.info("暂无零件数据。")
+                st.info("No part data available.")
         
         # 删除零件
         with management_tabs[2]:
-            st.subheader("🗑️ 删除零件")
+            st.subheader("🗑️ Delete Part")
             
             parts = load_parts_data()
             if parts:
                 selected_part = st.selectbox(
-                    "选择要删除的零件",
+                    "Select Part to Delete",
                     parts,
                     format_func=lambda x: f"{x['part_number']} - {x['part_name']}",
                     key="delete_part_select"
                 )
                 
                 if selected_part:
-                    st.warning(f"您即将删除以下零件：")
-                    st.write(f"零件编号: {selected_part['part_number']}")
-                    st.write(f"零件名称: {selected_part['part_name']}")
-                    st.write(f"描述: {selected_part['description']}")
-                    st.write(f"操作员: {selected_part['operator']}")
-                    st.write(f"创建时间: {selected_part['created_time']}")
+                    st.warning(f"You are about to delete the following part:")
+                    st.write(f"Part Number: {selected_part['part_number']}")
+                    st.write(f"Part Name: {selected_part['part_name']}")
+                    st.write(f"Description: {selected_part['description']}")
+                    st.write(f"Operator: {selected_part['operator']}")
+                    st.write(f"Created Time: {selected_part['created_time']}")
                     
                     if selected_part.get('image'):
-                        st.image(f"data:image/jpeg;base64,{selected_part['image']}", caption="零件图片", width=200)
+                        st.image(f"data:image/jpeg;base64,{selected_part['image']}", caption="Part Image", width=200)
                     
                     col1, col2 = st.columns(2)
                     with col1:
-                        if st.button("确认删除", type="secondary", key="confirm_delete_part"):
+                        if st.button("Confirm Delete", type="secondary", key="confirm_delete_part"):
                             if delete_part(selected_part['id']):
-                                st.markdown('<div class="success-message">✅ 零件删除成功！</div>', unsafe_allow_html=True)
+                                st.markdown('<div class="success-message">✅ Part deleted successfully!</div>', unsafe_allow_html=True)
                                 st.rerun()
                             else:
-                                st.markdown('<div class="error-message">❌ 零件删除失败！</div>', unsafe_allow_html=True)
+                                st.markdown('<div class="error-message">❌ Part deletion failed!</div>', unsafe_allow_html=True)
                     with col2:
-                        if st.button("取消删除", key="cancel_delete_part"):
+                        if st.button("Cancel Delete", key="cancel_delete_part"):
                             st.rerun()
             else:
-                st.info("暂无零件数据。")
+                st.info("No part data available.")
     
-    elif menu == "零件查询":
+    elif menu == "Part Query":
         # 所有用户都可以查询零件
-        st.header("🔍 零件查询")
+        st.header("🔍 Part Query")
         
         # 搜索选项
-        search_tabs = st.tabs(["搜索零件", "浏览所有零件"])
+        search_tabs = st.tabs(["Search Parts", "Browse All Parts"])
         
         # 搜索零件
         with search_tabs[0]:
-            st.subheader("🔍 搜索零件")
+            st.subheader("🔍 Search Parts")
             
             col1, col2 = st.columns([2, 1])
             with col1:
-                search_query = st.text_input("搜索关键词", placeholder="输入零件编号、名称或描述信息", key="search_input")
+                search_query = st.text_input("Search Keywords", placeholder="Enter part number, name or description", key="search_input")
             with col2:
                 search_type = st.selectbox(
-                    "搜索类型",
+                    "Search Type",
                     ["all", "part_number", "description"],
-                    format_func=lambda x: {"all": "全部", "part_number": "零件编号", "description": "描述信息"}[x],
+                    format_func=lambda x: {"all": "All", "part_number": "Part Number", "description": "Description"}[x],
                     key="search_type"
                 )
             
-            if st.button("🔍 搜索", type="primary", key="search_btn"):
+            if st.button("🔍 Search", type="primary", key="search_btn"):
                 if search_query:
                     results = search_parts(search_query, search_type)
                     if results:
-                        st.success(f"找到 {len(results)} 个匹配的零件")
+                        st.success(f"Found {len(results)} matching parts")
                         
                         # 显示搜索结果
                         for part in results:
@@ -584,36 +584,36 @@ def main():
                                     <div class="report-header">
                                         <div class="report-title">{part['part_number']} - {part['part_name']}</div>
                                     </div>
-                                    <p><strong>描述:</strong> {part['description']}</p>
-                                    <p><strong>操作员:</strong> {part['operator']}</p>
-                                    <p><strong>创建时间:</strong> {part['created_time']}</p>
+                                    <p><strong>Description:</strong> {part['description']}</p>
+                                    <p><strong>Operator:</strong> {part['operator']}</p>
+                                    <p><strong>Created Time:</strong> {part['created_time']}</p>
                                 </div>
                                 """, unsafe_allow_html=True)
                                 
                                 # 显示图片
                                 if part.get('image'):
-                                    st.image(f"data:image/jpeg;base64,{part['image']}", caption="零件图片", width=300)
+                                    st.image(f"data:image/jpeg;base64,{part['image']}", caption="Part Image", width=300)
                                 
                                 st.markdown("---")
                     else:
-                        st.warning("未找到匹配的零件")
+                        st.warning("No matching parts found")
                 else:
-                    st.warning("请输入搜索关键词")
+                    st.warning("Please enter search keywords")
         
         # 浏览所有零件
         with search_tabs[1]:
-            st.subheader("📋 浏览所有零件")
+            st.subheader("📋 Browse All Parts")
             
             parts = load_parts_data()
             if parts:
                 # 统计信息
                 col1, col2, col3 = st.columns(3)
                 with col1:
-                    st.metric("总零件数", len(parts))
+                    st.metric("Total Parts", len(parts))
                 with col2:
-                    st.metric("操作员数", len(set(part['operator'] for part in parts)))
+                    st.metric("Operators", len(set(part['operator'] for part in parts)))
                 with col3:
-                    st.metric("有图片的零件", len([part for part in parts if part.get('image')]))
+                    st.metric("Parts with Images", len([part for part in parts if part.get('image')]))
                 
                 # 显示所有零件
                 for part in parts:
@@ -623,15 +623,15 @@ def main():
                             <div class="report-header">
                                 <div class="report-title">{part['part_number']} - {part['part_name']}</div>
                             </div>
-                            <p><strong>描述:</strong> {part['description']}</p>
-                            <p><strong>操作员:</strong> {part['operator']}</p>
-                            <p><strong>创建时间:</strong> {part['created_time']}</p>
+                            <p><strong>Description:</strong> {part['description']}</p>
+                            <p><strong>Operator:</strong> {part['operator']}</p>
+                            <p><strong>Created Time:</strong> {part['created_time']}</p>
                         </div>
                         """, unsafe_allow_html=True)
                         
                         # 显示图片
                         if part.get('image'):
-                            st.image(f"data:image/jpeg;base64,{part['image']}", caption="零件图片", width=300)
+                            st.image(f"data:image/jpeg;base64,{part['image']}", caption="Part Image", width=300)
                         
                         st.markdown("---")
                 
@@ -641,35 +641,35 @@ def main():
                     df_data = []
                     for part in parts:
                         df_data.append({
-                            '零件编号': part['part_number'],
-                            '零件名称': part['part_name'],
-                            '描述信息': part['description'],
-                            '操作员': part['operator'],
-                            '创建时间': part['created_time']
+                            'Part Number': part['part_number'],
+                            'Part Name': part['part_name'],
+                            'Description': part['description'],
+                            'Operator': part['operator'],
+                            'Created Time': part['created_time']
                         })
                     
                     df = pd.DataFrame(df_data)
                     csv = df.to_csv(index=False, encoding='utf-8-sig')
                     st.download_button(
-                        label="📥 导出所有零件数据(CSV)",
+                        label="📥 Export All Parts Data (CSV)",
                         data=csv,
-                        file_name=f"零件数据库_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                        file_name=f"Parts_Database_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                         mime="text/csv"
                     )
             else:
-                st.info("暂无零件数据。")
+                st.info("No part data available.")
     
 # 移除旧的数据查询功能，已被零件查询替代
     
     # 页脚
     st.markdown("---")
-    st.markdown("©智库zicus-ai| 技术支持：RBCC-phrase3-Team12-蔡伟")
+    st.markdown("©智库zicus-ai| Technical Support: RBCC-phrase3-Team12-蔡伟")
 
 def require_admin():
     """检查用户是否为管理员"""
     if 'user' not in st.session_state or st.session_state.user.get('role') != 'admin':
-        st.error("⚠️ 权限不足！此功能需要管理员权限。")
-        st.info("请使用管理员账号登录。")
+        st.error("⚠️ Insufficient permissions! This function requires administrator privileges.")
+        st.info("Please login with an administrator account.")
         return False
     return True
 
