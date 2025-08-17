@@ -280,7 +280,7 @@ def main():
         st.header("Please Login First")
         st.info("After logging in, data management and query functions will be displayed. Please complete login or registration in the left sidebar.")
         st.markdown("---")
-        st.markdown("©智库zicus-ai| Technical Support: RBCC-phrase3-Team12")
+        st.markdown("©ZICUS-AI| Technical Support: RBCC-phrase3-Team12")
         return
 
     # 侧边栏 - 功能菜单（根据用户角色显示）
@@ -564,7 +564,7 @@ def main():
     
     # 页脚
     st.markdown("---")
-    st.markdown("©智库zicus-ai| Technical Support: RBCC-phrase3-Team12")
+    st.markdown("©ZICUS-AI| Technical Support: RBCC-phrase3-Team12")
 
 def require_admin():
     """检查用户是否为管理员"""
