@@ -369,7 +369,7 @@ def show_parts_query():
                                             cad_image_data = part.get('cad_image')
                                             if cad_image_data:
                                                 st.markdown("---")
-                                                st.markdown("### 🎨 CAD设计图")
+                                                st.markdown("### 🎨 CAD design image ")
                                                 try:
                                                     st.image(f"data:image/png;base64,{cad_image_data}", 
                                                              caption=f"CAD Design: {part.get('part_name', 'N/A')}",
@@ -379,10 +379,10 @@ def show_parts_query():
                                             
                                             # 显示CAD图片路径信息（调试用）
                                             if part.get('has_cad_image'):
-                                                with st.expander("🔍 CAD图片信息", expanded=False):
-                                                    st.info(f"**CAD图片路径:** {part.get('cad_image_path', 'N/A')}")
-                                                    st.info(f"**零件ID:** {part.get('part_number', 'N/A')}")
-                                                    st.info(f"**源文件:** {part.get('source_file', 'N/A')}")
+                                                with st.expander("🔍 CAD image information ", expanded=False):
+                                                    st.info(f"**CAD image path:** {part.get('cad_image_path', 'N/A')}")
+                                                    st.info(f"**Part ID:** {part.get('part_number', 'N/A')}")
+                                                    st.info(f"**Source file:** {part.get('source_file', 'N/A')}")
 
                                             if i < len(parts) - 1:
                                                 st.markdown("---")
@@ -460,7 +460,7 @@ def show_parts_query():
                                         cad_image_data = part.get('cad_image')
                                         if cad_image_data:
                                             st.markdown("---")
-                                            st.markdown("### 🎨 CAD设计图")
+                                            st.markdown("### 🎨 CAD design image")
                                             try:
                                                 st.image(f"data:image/png;base64,{cad_image_data}", 
                                                          caption=f"CAD Design: {part.get('part_name', 'N/A')}",
@@ -470,10 +470,10 @@ def show_parts_query():
                                         
                                         # 显示CAD图片路径信息（调试用）
                                         if part.get('has_cad_image'):
-                                            with st.expander("🔍 CAD图片信息", expanded=False):
-                                                st.info(f"**CAD图片路径:** {part.get('cad_image_path', 'N/A')}")
-                                                st.info(f"**零件ID:** {part.get('part_number', 'N/A')}")
-                                                st.info(f"**源文件:** {part.get('source_file', 'N/A')}")
+                                            with st.expander("🔍 CAD image information", expanded=False):
+                                                st.info(f"**CAD image path:** {part.get('cad_image_path', 'N/A')}")
+                                                st.info(f"**Part ID:** {part.get('part_number', 'N/A')}")
+                                                st.info(f"**Source file:** {part.get('source_file', 'N/A')}")
 
                                         if i < len(results) - 1:
                                             st.markdown("---")
@@ -546,7 +546,7 @@ def _display_search_results(results):
                 cad_image_data = part.get('cad_image')
                 if cad_image_data:
                     st.markdown("---")
-                    st.markdown("### 🎨 CAD设计图")
+                    st.markdown("### 🎨 CAD design image")
                     try:
                         # 使用列布局来更好地控制图片大小
                         col1, col2, col3 = st.columns([1, 2, 1])
@@ -560,14 +560,14 @@ def _display_search_results(results):
                 
                 # 显示CAD图片路径信息（调试用）
                 if part.get('has_cad_image'):
-                    with st.expander("🔍 CAD图片信息", expanded=False):
-                        st.info(f"**CAD图片路径:** {part.get('cad_image_path', 'N/A')}")
-                        st.info(f"**零件ID:** {part.get('part_number', 'N/A')}")
-                        st.info(f"**源文件:** {part.get('source_file', 'N/A')}")
+                    with st.expander("🔍 CAD image information", expanded=False):
+                        st.info(f"**CAD image path:** {part.get('cad_image_path', 'N/A')}")
+                        st.info(f"**Part ID:** {part.get('part_number', 'N/A')}")
+                        st.info(f"**Source file:** {part.get('source_file', 'N/A')}")
                         # 添加图片预览
                         if part.get('cad_image'):
                             st.image(f"data:image/png;base64,{part['cad_image']}", 
-                                     caption="CAD图片预览",
+                                     caption="CAD image preview",
                                      width=300,
                                      use_column_width=False)
 
