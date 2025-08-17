@@ -6,6 +6,10 @@ import json
 from PIL import Image
 import base64
 import hashlib
+from config import LOGO_PATH
+from utils import ensure_data_directory, show_success_message, show_error_message, show_warning_message, show_info_message
+from database import load_parts_data, add_part, update_part, delete_part, search_parts
+from ui import show_parts_query, show_statistics
 
 # 设置页面配置
 st.set_page_config(
@@ -15,7 +19,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 自定义CSS样式
+# 自定义CSS样式 - 参考app_1.py的样式
 st.markdown("""
 <style>
     .watermark {
@@ -23,7 +27,7 @@ st.markdown("""
         top: 20px;
         left: 20px;
         z-index: 1000;
-        opacity: 0.8;
+        opacity: 0.7;
         padding: 30px;
         background-color: rgba(255, 255, 255, 0.15);
         border-radius: 10px;
@@ -34,8 +38,6 @@ st.markdown("""
         height: auto;
         max-width: 350px;
         max-height: 300px;
-        # object-fit: contain;
-        # display: block;
     }
     .main-header {
         text-align: center;
@@ -207,120 +209,13 @@ def authenticate_user(username, password):
             return True, u.get('role', 'user')  # 返回认证状态和用户角色
     return False, None
 
-def load_parts_data():
-    """加载零件数据库"""
-    parts_file = "dataset/parts.json"
-    if os.path.exists(parts_file):
-        try:
-            with open(parts_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except:
-            return []
-    return []
-
-def save_parts_data(parts):
-    """保存零件数据库"""
-    parts_file = "dataset/parts.json"
-    os.makedirs(os.path.dirname(parts_file), exist_ok=True)
-    with open(parts_file, 'w', encoding='utf-8') as f:
-        json.dump(parts, f, ensure_ascii=False, indent=2)
-
-# 移除不再需要的报表相关函数
-
-def get_next_part_id():
-    """获取下一个零件ID"""
-    parts = load_parts_data()
-    if not parts:
-        return 1
-    return max(part['id'] for part in parts) + 1
-
-def add_part(part_number, part_name, description, image_data, operator):
-    """添加新零件"""
-    parts = load_parts_data()
-    
-    # 检查零件编号是否已存在
-    if any(part['part_number'] == part_number for part in parts):
-        return False, "Part number already exists"
-    
-    new_part = {
-        'id': get_next_part_id(),
-        'part_number': part_number,
-        'part_name': part_name,
-        'description': description,
-        'image': image_data,
-        'operator': operator,
-        'created_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    
-    parts.append(new_part)
-    save_parts_data(parts)
-    return True, "Part added successfully"
-
-def update_part(part_id, part_number, part_name, description, image_data, operator):
-    """更新零件信息"""
-    parts = load_parts_data()
-    
-    for part in parts:
-        if part['id'] == part_id:
-            # 检查零件编号是否与其他零件重复
-            if any(p['part_number'] == part_number and p['id'] != part_id for p in parts):
-                return False, "Part number conflicts with other parts"
-            
-            part['part_number'] = part_number
-            part['part_name'] = part_name
-            part['description'] = description
-            if image_data:  # 只有当有新图片时才更新
-                part['image'] = image_data
-            part['operator'] = operator
-            part['updated_time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            break
-    
-    save_parts_data(parts)
-    return True, "Part updated successfully"
-
-def delete_part(part_id):
-    """删除零件"""
-    parts = load_parts_data()
-    parts = [part for part in parts if part['id'] != part_id]
-    save_parts_data(parts)
-    return True
-
-def search_parts(query, search_type="all"):
-    """搜索零件"""
-    parts = load_parts_data()
-    if not query:
-        return parts
-    
-    query = query.lower().strip()
-    results = []
-    
-    for part in parts:
-        if search_type == "all":
-            # 在所有字段中搜索
-            if (query in part['part_number'].lower() or 
-                query in part['part_name'].lower() or 
-                query in part['description'].lower()):
-                results.append(part)
-        elif search_type == "part_number":
-            # 只在零件编号中搜索
-            if query in part['part_number'].lower():
-                results.append(part)
-        elif search_type == "description":
-            # 只在描述中搜索
-            if query in part['description'].lower():
-                results.append(part)
-    
-    return results
-
-# 移除不再需要的报表相关函数
-
 def main():
     # 水印图片
     st.markdown("""
     <div class="watermark">
         <img src="data:image/png;base64,{}" alt="Logo">
     </div>
-    """.format(base64.b64encode(open("imgs/logo/ZICUS LOGO.png", "rb").read()).decode()), unsafe_allow_html=True)
+    """.format(base64.b64encode(open("imgs/ZICUS LOGO.png", "rb").read()).decode()), unsafe_allow_html=True)
     
     # 主标题
     st.markdown('<h1 class="main-header">Non-standard Part Approval AI Retrieval System</h1>', unsafe_allow_html=True)
@@ -385,7 +280,7 @@ def main():
         st.header("Please Login First")
         st.info("After logging in, data management and query functions will be displayed. Please complete login or registration in the left sidebar.")
         st.markdown("---")
-        st.markdown("©智库zicus-ai| Technical Support: RBCC-phrase3-Team12-蔡伟")
+        st.markdown("©智库zicus-ai| Technical Support: RBCC-phrase3-Team12")
         return
 
     # 侧边栏 - 功能菜单（根据用户角色显示）
@@ -396,13 +291,13 @@ def main():
         # 管理员：完整功能
         menu = st.sidebar.selectbox(
             "Select Function",
-            ["Part Management", "Part Query"]
+            ["Part Management", "Part Query", "AI Query", "Statistics"]
         )
     else:
         # 用户：只读功能
         menu = st.sidebar.selectbox(
             "Select Function",
-            ["Part Query"]
+            ["Part Query", "AI Query", "Statistics"]
         )
     
     if menu == "Part Management":
@@ -659,11 +554,17 @@ def main():
             else:
                 st.info("No part data available.")
     
-# 移除旧的数据查询功能，已被零件查询替代
+    elif menu == "AI Query":
+        # AI查询功能 - 保持原有功能
+        show_parts_query()
+    
+    elif menu == "Statistics":
+        # 统计分析功能 - 保持原有功能
+        show_statistics()
     
     # 页脚
     st.markdown("---")
-    st.markdown("©智库zicus-ai| Technical Support: RBCC-phrase3-Team12-蔡伟")
+    st.markdown("©智库zicus-ai| Technical Support: RBCC-phrase3-Team12")
 
 def require_admin():
     """检查用户是否为管理员"""
