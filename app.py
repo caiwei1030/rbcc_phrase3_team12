@@ -19,25 +19,46 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 自定义CSS样式 - 参考app_1.py的样式
+# 自定义CSS样式 - 透明水印和居中标题
 st.markdown("""
 <style>
     .watermark {
         position: fixed;
-        top: 20px;
-        left: 20px;
+        top: 15px;
+        left: 15px;
         z-index: 1000;
-        opacity: 0.7;
-        padding: 30px;
-        background-color: rgba(255, 255, 255, 0.15);
-        border-radius: 10px;
-        backdrop-filter: blur(5px);
+        opacity: 0.25;
+        padding: 0;
+        background-color: transparent;
+        border-radius: 0;
+        backdrop-filter: none;
+        pointer-events: none;
     }
     .watermark img {
         width: auto;
         height: auto;
-        max-width: 350px;
-        max-height: 300px;
+        max-width: 120px;
+        max-height: 80px;
+        min-width: 60px;
+        min-height: 40px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 3px rgba(0,0,0,0.1));
+        display: block;
+    }
+    
+    /* 响应式水印 - 在小屏幕上调整大小 */
+    @media (max-width: 768px) {
+        .watermark img {
+            max-width: 80px;
+            max-height: 60px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .watermark img {
+            max-width: 60px;
+            max-height: 45px;
+        }
     }
     .main-header {
         text-align: center;
@@ -337,15 +358,123 @@ def show_cad_library_overview():
         return False
 
 def main():
-    # 水印图片
-    st.markdown("""
-    <div class="watermark">
-        <img src="data:image/png;base64,{}" alt="Logo">
-    </div>
-    """.format(base64.b64encode(open("imgs/ZICUS LOGO.png", "rb").read()).decode()), unsafe_allow_html=True)
+    # 水印图片 - 使用正确的路径和base64编码
+    try:
+        with open(LOGO_PATH, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode()
+            
+                        # 方法1: 使用Streamlit容器创建水印效果
+            with st.container():
+                # 创建一个透明的容器来放置LOGO
+                col1, col2, col3 = st.columns([1, 4, 1])
+                with col1:
+                    # 使用HTML来创建水印效果
+                    watermark_html = f'''
+                    <div style="
+                        position: relative !important;
+                        z-index: 1000 !important;
+                        opacity: 0.25 !important;
+                        pointer-events: none !important;
+                        background-color: transparent !important;
+                        padding: 0 !important;
+                        margin: 0 !important;
+                    ">
+                        <img src="data:image/png;base64,{encoded_string}" 
+                             alt="ZICUS LOGO" 
+                             style="
+                                 width: auto !important;
+                                 height: auto !important;
+                                 max-width: 120px !important;
+                                 max-height: 80px !important;
+                                 min-width: 60px !important;
+                                 min-height: 40px !important;
+                                 object-fit: contain !important;
+                                 filter: drop-shadow(0 0 3px rgba(0,0,0,0.1)) !important;
+                                 display: block !important;
+                             ">
+                    </div>
+                    '''
+                    st.markdown(watermark_html, unsafe_allow_html=True)
+            
+            # 方法2: 备用JavaScript水印
+            watermark_js = f'''
+            <script>
+            // 创建水印元素
+            const watermark = document.createElement('div');
+            watermark.style.cssText = `
+                position: fixed !important;
+                top: 15px !important;
+                left: 15px !important;
+                z-index: 999999 !important;
+                opacity: 0.25 !important;
+                pointer-events: none !important;
+                background-color: transparent !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+            `;
+            
+            const img = document.createElement('img');
+            img.src = 'data:image/png;base64,{encoded_string}';
+            img.alt = 'ZICUS LOGO';
+            img.style.cssText = `
+                width: auto !important;
+                height: auto !important;
+                max-width: 120px !important;
+                max-height: 80px !important;
+                min-width: 60px !important;
+                min-height: 40px !important;
+                object-fit: contain !important;
+                filter: drop-shadow(0 0 3px rgba(0,0,0,0.1)) !important;
+                display: block !important;
+            `;
+            
+            watermark.appendChild(img);
+            document.body.appendChild(watermark);
+            </script>
+            '''
+            
+            st.markdown(watermark_js, unsafe_allow_html=True)
+            
+            # 显示成功消息
+            # st.success("✅ LOGO水印已加载 (使用Streamlit容器 + JavaScript双重保障)")
+            
+    except Exception as e:
+        st.warning(f"Failed to load logo image: {e}")
+        st.error(f"Error: {str(e)}")
+        # 尝试显示文件路径信息
+        st.info(f"LOGO path: {LOGO_PATH}")
+        st.info(f"Current working directory: {os.getcwd()}")
+        st.info(f"File exists: {os.path.exists(LOGO_PATH)}")
     
-    # 主标题
-    st.markdown('<h1 class="main-header">Non-standard Part Approval AI Retrieval System</h1>', unsafe_allow_html=True)
+    # 检查配置状态
+    from config import FASTGPT_API_KEY, FASTGPT_DATASET_ID
+    
+    # 在侧边栏显示配置状态
+    with st.sidebar:
+        st.subheader("🔧 System Configuration Status")
+        
+        # FastGPT配置状态
+        if FASTGPT_API_KEY and FASTGPT_DATASET_ID:
+            st.success("✅ FastGPT Configuration Complete")
+            st.info(f"Dataset ID: {FASTGPT_DATASET_ID[:8]}...")
+        else:
+            st.error("❌ FastGPT Configuration Incomplete")
+            if not FASTGPT_API_KEY:
+                st.warning("Missing FASTGPT_API_KEY")
+            if not FASTGPT_DATASET_ID:
+                st.warning("Missing FASTGPT_DATASET_ID")
+            
+            st.info("💡 Configuration Instructions:")
+            st.markdown("""
+            **本地开发：** 在 `.streamlit/secrets.toml` 中配置
+            **Streamlit Cloud：** 在环境变量中配置
+            """)
+        
+        st.divider()
+    
+    # 主界面标题 - 居中显示
+    st.markdown('<h1 style="text-align: center; color: #1f77b4; margin-bottom: 30px;">ZICUS-AI Retrieval System</h1>', unsafe_allow_html=True)
+    st.markdown("---")
     
     # 确保数据目录存在
     ensure_data_directory()

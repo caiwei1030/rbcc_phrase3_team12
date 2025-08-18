@@ -238,9 +238,16 @@ def search_fastgpt_kb(query: str, similarity: float = 0.5):
     调用FastGPT知识库进行搜索，并按向量相似度排序。
     增强的RAG搜索功能，支持多轮查询和结果优化。
     """
-    if not FASTGPT_API_KEY or not FASTGPT_DATASET_ID:
-        st.error("错误：FastGPT API密钥或数据集ID未配置。请检查您的配置。")
-        return [], []
+    # 检查配置是否完整
+    if not FASTGPT_API_KEY:
+        error_msg = "FastGPT API密钥未配置。请在Streamlit Cloud的环境变量中设置FASTGPT_API_KEY，或在本地创建.streamlit/secrets.toml文件。"
+        st.error(error_msg)
+        return [], [{"content": "配置错误", "error": error_msg}]
+    
+    if not FASTGPT_DATASET_ID:
+        error_msg = "FastGPT数据集ID未配置。请在Streamlit Cloud的环境变量中设置FASTGPT_DATASET_ID，或在本地创建.streamlit/secrets.toml文件。"
+        st.error(error_msg)
+        return [], [{"content": "配置错误", "error": error_msg}]
 
     # 直接使用原始查询，不做任何预处理
     search_url = "https://cloud.fastgpt.cn/api/core/dataset/searchTest"
